@@ -89,29 +89,49 @@ Edit **`mobile/src/config.js`** and set `SERVER_URL`:
 
 ## 3. Build the APK
 
-The app is an Expo project. Install tooling first:
+The native **`mobile/android/`** Gradle project is already generated and committed,
+so you can build the APK directly with **Gradle** — no Expo cloud account needed.
 
+### Prerequisites
+- **JDK 17** (Android Gradle Plugin does **not** support JDK 21+/25).
+  The easiest way is to install **Android Studio**, which bundles JDK 17 and the SDK.
+- **Android SDK** with platform **34** and build-tools (Android Studio installs these).
+- Point Gradle at your SDK by creating `mobile/android/local.properties`:
+  ```properties
+  sdk.dir=/Users/you/Library/Android/sdk        # macOS
+  # sdk.dir=C:\\Users\\you\\AppData\\Local\\Android\\Sdk   # Windows
+  # sdk.dir=/home/you/Android/Sdk                # Linux
+  ```
+
+### Option A — Local build with Gradle (`./gradlew`)
 ```bash
 cd mobile
-npm install
-```
+npm install            # install JS dependencies (needed once; Gradle bundles the JS)
 
-### Option A — Cloud build (recommended, no Android SDK needed)
+cd android
+./gradlew assembleRelease            # macOS/Linux   (Windows: gradlew.bat assembleRelease)
+```
+The installable APK is written to:
+```
+mobile/android/app/build/outputs/apk/release/app-release.apk
+```
+Copy it to an Android phone and install (allow "install from unknown sources").
+
+> The release build is signed with the bundled **debug keystore** so it installs immediately.
+> For the Google Play Store, generate your own keystore and update the `release` `signingConfig`
+> in `mobile/android/app/build.gradle` — see https://reactnative.dev/docs/signed-apk-android
+
+> If you ever change `app.json` (name, icon, package), regenerate the native project with
+> `npx expo prebuild --platform android` from the `mobile/` folder.
+
+### Option B — Cloud build (no Android SDK needed)
 ```bash
+cd mobile && npm install
 npm install -g eas-cli
 eas login                      # free Expo account
 eas build -p android --profile preview
 ```
-EAS compiles it and gives you a link to download the **`.apk`**. Install it on any Android phone (allow "install from unknown sources").
-
-### Option B — Local build (needs Android Studio / SDK)
-```bash
-npx expo run:android           # builds & installs on a connected device/emulator
-# or a release APK:
-npx expo prebuild
-cd android && ./gradlew assembleRelease
-# APK at: android/app/build/outputs/apk/release/app-release.apk
-```
+EAS compiles it and gives you a link to download the **`.apk`**.
 
 ### Try it instantly without building (Expo Go)
 ```bash
