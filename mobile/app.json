@@ -18,6 +18,7 @@
     },
     "android": {
       "package": "com.ohrtemimim.attendance",
+      "permissions": ["RECEIVE_BOOT_COMPLETED"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#1a2b4a"

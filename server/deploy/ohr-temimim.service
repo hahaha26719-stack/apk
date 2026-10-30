@@ -1,0 +1,22 @@
+[Unit]
+Description=Ohr Temimim Attendance Server (FastAPI, port 8000)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# User/group that owns the files (install.sh substitutes these).
+User=__USER__
+WorkingDirectory=__APP_DIR__
+# Load production secrets (SECRET_KEY, admin password, etc.) if the file exists.
+EnvironmentFile=-__APP_DIR__/.env
+# Run uvicorn from the virtualenv on port 8000.
+ExecStart=__APP_DIR__/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=3
+# Logs go to the systemd journal (view with: journalctl -u ohr-temimim -f)
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

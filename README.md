@@ -54,6 +54,26 @@ python run.py
 - **API base:** http://localhost:8000/api
 - **Default admin login:** `admin` / `admin123`  ← **change this in production!**
 
+### Run the server as a service on boot (Linux / systemd)
+To have the server start automatically on every boot and restart if it crashes:
+
+```bash
+cd server
+sudo bash deploy/install.sh
+```
+
+This creates a Python virtualenv, generates a random `SECRET_KEY` in `server/.env`,
+installs a **systemd** service called `ohr-temimim`, and starts it on port 8000.
+
+```bash
+sudo systemctl status ohr-temimim     # check it's running
+sudo journalctl -u ohr-temimim -f     # live logs
+sudo systemctl restart ohr-temimim    # restart
+```
+
+> After install, edit `server/.env` to set a real `DEFAULT_ADMIN_PASSWORD`, then
+> `sudo systemctl restart ohr-temimim`.
+
 ### Admin panel features
 - Secure admin login (session-based)
 - Dashboard: total students, present now, absent, classes, sign-ins today, recent activity
@@ -132,6 +152,20 @@ eas login                      # free Expo account
 eas build -p android --profile preview
 ```
 EAS compiles it and gives you a link to download the **`.apk`**.
+
+### Launch the app automatically on device boot (kiosk mode)
+The APK is configured to **start automatically when the Android device finishes booting**
+— ideal for a dedicated attendance tablet at the school entrance. This is handled by a
+`BootReceiver` (see `mobile/android/app/src/main/java/.../BootReceiver.kt`) and the
+`RECEIVE_BOOT_COMPLETED` permission.
+
+Notes:
+- The user must open the app **once** after installing (Android blocks auto-start until
+  the app has been launched at least once).
+- On some phones (Xiaomi, Oppo, Huawei, etc.) you must also enable **"Autostart"** for
+  the app in the system settings — manufacturer battery managers block boot receivers by default.
+- For a true locked-down kiosk, pair this with Android **Screen Pinning** (Settings →
+  Security → Screen pinning) or a dedicated kiosk/MDM launcher.
 
 ### Try it instantly without building (Expo Go)
 ```bash
