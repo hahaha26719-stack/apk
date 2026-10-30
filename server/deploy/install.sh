@@ -28,10 +28,12 @@ fi
 
 # On ARM boards (Banana Pi, Raspberry Pi, etc.) pip must compile bcrypt/cffi from
 # source, which needs compilers and headers. Install them if apt is available.
+# All Python deps are pure-Python wheels (no native/Rust builds), so only
+# python3-venv is needed. Install it if apt is available.
 if command -v apt-get >/dev/null 2>&1; then
-  echo "==> Installing build dependencies (compilers, headers)..."
+  echo "==> Ensuring python3-venv is installed..."
   apt-get update -y
-  apt-get install -y python3-dev python3-venv build-essential libffi-dev pkg-config cargo rustc
+  apt-get install -y python3-venv
 fi
 
 echo "==> Creating virtualenv and installing dependencies..."

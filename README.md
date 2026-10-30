@@ -37,13 +37,9 @@ apk/
 
 Requires Python 3.11+.
 
-> **On ARM boards (Banana Pi / Raspberry Pi):** pip compiles `bcrypt` from source,
-> which needs build tools. Install them first:
-> ```bash
-> sudo apt update
-> sudo apt install -y python3-dev python3-venv build-essential libffi-dev pkg-config cargo rustc
-> ```
-> (The `deploy/install.sh` script does this for you automatically.)
+> **ARM boards (Banana Pi / Raspberry Pi):** all dependencies are pure-Python wheels
+> (no compiler needed). If `python3 -m venv` complains, install venv once:
+> `sudo apt install -y python3-venv`.
 
 ```bash
 cd server
