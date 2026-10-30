@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Classes{% endblock %}
+{% block content %}
+<h1 class="page-title">Classes</h1>
+
+<div class="card" style="max-width:620px;">
+  <h2>Add Class</h2>
+  <form method="post" action="/classes/new">
+    <div class="row">
+      <div><label>Name *</label><input name="name" required /></div>
+      <div><label>Grade</label><input name="grade" /></div>
+    </div>
+    <label>Teacher</label><input name="teacher" />
+    <div style="margin-top:14px;"><button class="btn gold" type="submit">Add Class</button></div>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Name</th><th>Grade</th><th>Teacher</th><th>Students</th><th></th></tr></thead>
+    <tbody>
+      {% for c in classes %}
+      <tr>
+        <td>{{ c.name }}</td><td>{{ c.grade or '—' }}</td><td>{{ c.teacher or '—' }}</td>
+        <td>{{ c.students|length }}</td>
+        <td>
+          <form method="post" action="/classes/{{ c.id }}/delete" style="display:inline" onsubmit="return confirm('Delete class {{ c.name }}?');">
+            <button class="btn sm danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" style="color:#6b7280;">No classes yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

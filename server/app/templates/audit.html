@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Audit Log{% endblock %}
+{% block content %}
+<h1 class="page-title">Audit Log</h1>
+<div class="card">
+  <table>
+    <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Detail</th></tr></thead>
+    <tbody>
+      {% for e in entries %}
+      <tr>
+        <td>{{ e.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td>{{ e.admin_username or '—' }}</td>
+        <td>{{ e.action }}</td>
+        <td>{{ e.detail or '' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" style="color:#6b7280;">No audit entries.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

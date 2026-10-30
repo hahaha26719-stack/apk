@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Admin Users{% endblock %}
+{% block content %}
+<h1 class="page-title">Admin Users</h1>
+
+<div class="card" style="max-width:620px;">
+  <h2>Add Admin</h2>
+  <form method="post" action="/admins/new">
+    <div class="row">
+      <div><label>Username *</label><input name="username" required /></div>
+      <div><label>Full Name</label><input name="full_name" /></div>
+    </div>
+    <div class="row">
+      <div><label>Password *</label><input name="password" type="password" required /></div>
+      <div>
+        <label>Superadmin</label>
+        <select name="is_superadmin"><option value="0">No</option><option value="1">Yes</option></select>
+      </div>
+    </div>
+    <div style="margin-top:14px;"><button class="btn gold" type="submit">Add Admin</button></div>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <thead><tr><th>Username</th><th>Name</th><th>Role</th><th>Active</th><th></th></tr></thead>
+    <tbody>
+      {% for a in admins %}
+      <tr>
+        <td>{{ a.username }}</td><td>{{ a.full_name or '—' }}</td>
+        <td>{{ 'Superadmin' if a.is_superadmin else 'Admin' }}</td>
+        <td>{{ 'Yes' if a.is_active else 'No' }}</td>
+        <td>
+          {% if a.username != admin.username %}
+          <form method="post" action="/admins/{{ a.id }}/delete" style="display:inline" onsubmit="return confirm('Delete admin {{ a.username }}?');">
+            <button class="btn sm danger" type="submit">Delete</button>
+          </form>
+          {% else %}<span style="color:#6b7280;">(you)</span>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<h1 class="page-title">Students</h1>
+
+<form class="toolbar" method="get" action="/students">
+  <div>
+    <label>Search</label>
+    <input name="search" value="{{ search }}" placeholder="Name or ID" />
+  </div>
+  <div>
+    <label>Class</label>
+    <select name="class_id">
+      <option value="">All classes</option>
+      {% for c in classes %}
+      <option value="{{ c.id }}" {{ 'selected' if class_id==c.id }}>{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div><button class="btn" type="submit">Filter</button></div>
+  <div><a class="btn ghost" href="/students">Reset</a></div>
+  <div><a class="btn gold" href="/students/new">+ Add Student</a></div>
+</form>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Name</th><th>Grade</th><th>Class</th><th>Status</th><th>Active</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td><strong>{{ s.student_id }}</strong></td>
+        <td>{{ s.full_name }}</td>
+        <td>{{ s.grade or '—' }}</td>
+        <td>{{ s.school_class.name if s.school_class else '—' }}</td>
+        <td><span class="badge {{ 'present' if s.is_present else 'absent' }}">{{ 'Present' if s.is_present else 'Out' }}</span></td>
+        <td>{{ 'Yes' if s.is_active else 'No' }}</td>
+        <td style="white-space:nowrap;">
+          <a class="btn sm ghost" href="/students/{{ s.id }}/edit">Edit</a>
+          <a class="btn sm ghost" href="/students/{{ s.id }}/toggle">Toggle In/Out</a>
+          <form method="post" action="/students/{{ s.id }}/delete" style="display:inline" onsubmit="return confirm('Delete {{ s.full_name }}?');">
+            <button class="btn sm danger" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" style="color:#6b7280;">No students found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

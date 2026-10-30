@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1 class="page-title">Dashboard</h1>
+
+<div class="stats">
+  <div class="stat"><div class="num">{{ stats.total_students }}</div><div class="label">Total Students</div></div>
+  <div class="stat present"><div class="num">{{ stats.present }}</div><div class="label">Present Now</div></div>
+  <div class="stat absent"><div class="num">{{ stats.absent }}</div><div class="label">Absent</div></div>
+  <div class="stat"><div class="num">{{ stats.classes }}</div><div class="label">Classes</div></div>
+  <div class="stat"><div class="num">{{ stats.today_events }}</div><div class="label">Sign-ins Today</div></div>
+</div>
+
+<div class="card">
+  <h2>Recent Activity</h2>
+  <table>
+    <thead><tr><th>Time</th><th>Student</th><th>ID</th><th>Action</th><th>Source</th></tr></thead>
+    <tbody>
+      {% for r in recent %}
+      <tr>
+        <td>{{ r.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+        <td>{{ r.student.full_name }}</td>
+        <td>{{ r.student.student_id }}</td>
+        <td><span class="badge {{ r.action }}">{{ 'Signed In' if r.action=='in' else 'Signed Out' }}</span></td>
+        <td>{{ r.source }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" style="color:#6b7280;">No activity yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

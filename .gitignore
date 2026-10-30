@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.db
+server/server.log
+
+# Node / Expo
+node_modules/
+.expo/
+dist/
+*.log
+npm-debug.*
+
+# Build artifacts
+*.apk
+*.aab
+android/
+ios/
+
+# OS
+.DS_Store
