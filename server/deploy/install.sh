@@ -26,6 +26,14 @@ if ! command -v python3 >/dev/null 2>&1; then
   exit 1
 fi
 
+# On ARM boards (Banana Pi, Raspberry Pi, etc.) pip must compile bcrypt/cffi from
+# source, which needs compilers and headers. Install them if apt is available.
+if command -v apt-get >/dev/null 2>&1; then
+  echo "==> Installing build dependencies (compilers, headers)..."
+  apt-get update -y
+  apt-get install -y python3-dev python3-venv build-essential libffi-dev pkg-config cargo rustc
+fi
+
 echo "==> Creating virtualenv and installing dependencies..."
 sudo -u "$RUN_USER" python3 -m venv "$APP_DIR/.venv"
 sudo -u "$RUN_USER" "$APP_DIR/.venv/bin/pip" install --upgrade pip >/dev/null
